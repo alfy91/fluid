@@ -141,7 +141,7 @@ instance Ann a => Pretty (Expr a) where
    pretty (Str α str) = highlightIf α $ text ("\"" <> str <> "\"")
    pretty (Constr α c x) = highlightIf α $ prettyConstr c x
    pretty (Record α xss) = highlightIf α $ curlyBraces (prettyOperator (.-.) xss)
-   pretty (Dictionary α sss) = highlightIf α $ dictBrackets (pretty sss)
+   pretty (Dictionary α sss) = highlightIf α $ curlyBraces (pretty sss)
    pretty (Matrix α e (x × y) e') =
       highlightIf α $ arrayBrackets
          ( pretty e .<>. text str.bar .<>. parentheses (text x .<>. text str.comma .<>. text y)
@@ -176,6 +176,7 @@ instance Ann a => Pretty (List (DictEntry a × Expr a)) where
 
 instance Ann a => Pretty (DictEntry a) where
    pretty (ExprKey k) = text str.lBracket .<>. pretty k .<>. text str.rBracket
+   pretty (VarKey k) = pretty k
 
 instance Ann a => Pretty (ListRest a) where
    pretty (Next ann (Record _ xss) l) = highlightIf ann (text str.comma) .<>. (highlightIf ann (curlyBraces (prettyOperator (.<>.) xss))) .-. pretty l
@@ -273,8 +274,8 @@ between l r doc = l .<>. doc .<>. r
 brackets :: Endo Doc
 brackets = between (text str.lBracket) (text str.rBracket)
 
-dictBrackets :: Endo Doc
-dictBrackets = between (text str.dictLBracket) (text str.dictRBracket)
+-- dictBrackets :: Endo Doc
+-- dictBrackets = between (text str.dictLBracket) (text str.dictRBracket)
 
 parentheses :: Endo Doc
 parentheses = between (text str.lparenth) (text str.rparenth)
@@ -352,7 +353,7 @@ keyBracks :: Endo Doc
 keyBracks = between (text str.lBracket) (text str.rBracket)
 
 prettyDict :: forall d b. Pretty d => (b -> Doc) -> List (b × d) -> Doc
-prettyDict = between (text str.dictLBracket) (text str.dictRBracket) # prettyRecordOrDict (text str.colon) keyBracks
+prettyDict = curlyBraces # prettyRecordOrDict (text str.colon) keyBracks
 
 prettyMatrix :: forall a. Highlightable a => E.Expr a -> Var -> Var -> E.Expr a -> Doc
 prettyMatrix e1 i j e2 = arrayBrackets (pretty e1 .<>. text str.lArrow .<>. text (i <> "×" <> j) .<>. text str.in_ .<>. pretty e2)

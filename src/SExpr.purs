@@ -60,7 +60,7 @@ data Expr a
    | Let (VarDefs a) (Expr a)
    | LetRec (RecDefs a) (Expr a)
 
-data DictEntry a = ExprKey (Expr a)
+data DictEntry a = ExprKey (Expr a) | VarKey Var
 
 data ListRest a
    = End a
@@ -129,7 +129,9 @@ data Module a = Module (List (VarDefs a + RecDefs a))
 
 instance Desugarable DictEntry E.Expr where
    desug (ExprKey e) = desug e
+   desug (VarKey v) = pure (E.Str bot v)
    desugBwd e (ExprKey e') = ExprKey $ desugBwd e e'
+   desugBwd _ (VarKey v) = VarKey v
 
 instance Desugarable Expr E.Expr where
    desug = exprFwd
@@ -274,7 +276,7 @@ exprBwd (E.Dictionary α ees) (Record _ xss) =
    in
       Record (foldl (∨) α αs) (zipWith (\(Pair _ e) (x × s) -> x × desugBwd e s) ees xss)
 exprBwd (E.Dictionary α ees) (Dictionary _ sss) =
-   Dictionary α (zipWith (\(Pair e e') ((ExprKey s) × s') -> (ExprKey (desugBwd e s)) × (desugBwd e' s')) ees sss)
+   Dictionary α (zipWith (\(Pair e e') (s × s') -> (desugBwd e s) × (desugBwd e' s')) ees sss)
 exprBwd (E.Matrix α e1 _ e2) (Matrix _ s1 (x × y) s2) =
    Matrix α (desugBwd e1 s1) (x × y) (desugBwd e2 s2)
 exprBwd (E.Lambda _ σ) (Lambda μ) = Lambda (desugBwd σ μ)
