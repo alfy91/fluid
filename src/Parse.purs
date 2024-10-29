@@ -298,7 +298,6 @@ expr_ =
                <|> listEnum
                <|> try constr
                <|> dict
-               <|> record
                <|> try variable
                <|> try float
                <|> try int -- int may start with +/-
@@ -351,13 +350,13 @@ expr_ =
             dict = sepBy kvPair token.comma <#> Dictionary unit # token.braces
                where
                kvPair :: SParser ((Raw DictEntry) × (Raw Expr))
-               kvPair = (((ExprKey <$> expr') # token.brackets) <* token.colon) `lift2 (×)` expr' <|> ((VarKey <$> ident) <* token.colon) `lift2 (×)` expr'
+               kvPair = (((ExprKey <$> expr') # token.brackets) <* token.colon) `lift2 (×)` expr' <|> ((VarKey unit <$> ident) <* token.colon) `lift2 (×)` expr'
 
-            record :: SParser (Raw Expr)
-            record = sepBy kvPair token.comma <#> Dictionary unit # token.braces
-               where
-               kvPair :: SParser ((Raw DictEntry) × (Raw Expr))
-               kvPair = ((VarKey <$> ident) <* token.colon) `lift2 (×)` expr'
+            -- record :: SParser (Raw Expr)
+            -- record = sepBy kvPair token.comma <#> Dictionary unit # token.braces
+            --    where
+            --    kvPair :: SParser ((Raw DictEntry) × (Raw Expr))
+            --    kvPair = ((VarKey <$> ident) <* token.colon) `lift2 (×)` expr'
 
             variable :: SParser (Raw Expr)
             variable = ident <#> Var

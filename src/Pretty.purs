@@ -141,7 +141,7 @@ instance Ann a => Pretty (Expr a) where
    pretty (Str α str) = highlightIf α $ text ("\"" <> str <> "\"")
    pretty (Constr α c x) = highlightIf α $ prettyConstr c x
    pretty (Record α xss) = highlightIf α $ curlyBraces (prettyOperator (.-.) xss)
-   pretty (Dictionary α sss) = highlightIf α $ curlyBraces (pretty sss)
+   pretty (Dictionary α sss) = highlightIf α $ curlyBraces (prettyDictEntries (.-.) sss)
    pretty (Matrix α e (x × y) e') =
       highlightIf α $ arrayBrackets
          ( pretty e .<>. text str.bar .<>. parentheses (text x .<>. text str.comma .<>. text y)
@@ -156,8 +156,8 @@ instance Ann a => Pretty (Expr a) where
    pretty (MatchAs s cs) = (text str.match .<>. pretty s .<>. text str.as) .-. curlyBraces (pretty cs)
    pretty (IfElse s1 s2 s3) = text str.if_ .<>. pretty s1 .<>. text str.then_ .<>. pretty s2 .<>. text str.else_ .<>. pretty s3
    pretty (ListEmpty α) = (highlightIf α $ brackets empty)
-   pretty (ListNonEmpty α (Record _ xss) l) =
-      (highlightIf α (text str.lBracket) .<>. highlightIf α (curlyBraces (prettyOperator (.<>.) xss))) .-. pretty l
+   pretty (ListNonEmpty α (Dictionary _ xss) l) =
+      (highlightIf α (text str.lBracket) .<>. highlightIf α (curlyBraces (prettyDictEntries (.<>.) xss))) .-. pretty l
    pretty (ListNonEmpty α e l) = highlightIf α (text str.lBracket) .<>. pretty e .<>. pretty l
    pretty (ListEnum s s') = brackets (pretty s .<>. text str.ellipsis .<>. pretty s')
    pretty (ListComp ann s qs) = highlightIf ann (brackets (pretty s .<>. text str.bar .<>. pretty qs))
@@ -169,17 +169,17 @@ prettyOperator _ (Cons s Nil) = text (key s) .<>. text str.colon .<>. pretty (va
 prettyOperator sep (Cons s xss) = sep (prettyOperator sep (toList (singleton s)) .<>. text str.comma) (prettyOperator sep xss)
 prettyOperator _ Nil = empty
 
-instance Ann a => Pretty (List (DictEntry a × Expr a)) where
-   pretty Nil = empty
-   pretty ((k × v) : Nil) = pretty k .<>. text str.colon .<>. pretty v
-   pretty ((k × v) : kvs) = pretty k .<>. text str.colon .<>. pretty v .<>. text str.comma .<>. pretty kvs
+prettyDictEntries :: forall a. Ann a => (Doc -> Doc -> Doc) -> (List (DictEntry a × Expr a)) -> Doc
+prettyDictEntries _ Nil = empty
+prettyDictEntries _ ((k × v) : Nil) = pretty k .<>. text str.colon .<>. pretty v
+prettyDictEntries sep ((k × v) : kvs) = sep (prettyDictEntries sep (toList (singleton (k × v))) .<>. text str.comma) (prettyDictEntries sep kvs)
 
 instance Ann a => Pretty (DictEntry a) where
    pretty (ExprKey k) = text str.lBracket .<>. pretty k .<>. text str.rBracket
-   pretty (VarKey k) = pretty k
+   pretty (VarKey α k) = highlightIf α $ pretty k
 
 instance Ann a => Pretty (ListRest a) where
-   pretty (Next ann (Record _ xss) l) = highlightIf ann (text str.comma) .<>. (highlightIf ann (curlyBraces (prettyOperator (.<>.) xss))) .-. pretty l
+   pretty (Next ann (Dictionary _ xss) l) = highlightIf ann (text str.comma) .<>. (highlightIf ann (curlyBraces (prettyDictEntries (.<>.) xss))) .-. pretty l
    pretty (Next ann s l) = highlightIf ann (text str.comma) .<>. pretty s .<>. pretty l
    pretty (End ann) = highlightIf ann (text str.rBracket)
 

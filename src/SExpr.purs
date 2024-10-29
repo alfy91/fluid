@@ -60,7 +60,7 @@ data Expr a
    | Let (VarDefs a) (Expr a)
    | LetRec (RecDefs a) (Expr a)
 
-data DictEntry a = ExprKey (Expr a) | VarKey Var
+data DictEntry a = ExprKey (Expr a) | VarKey a Var
 
 data ListRest a
    = End a
@@ -129,9 +129,13 @@ data Module a = Module (List (VarDefs a + RecDefs a))
 
 instance Desugarable DictEntry E.Expr where
    desug (ExprKey e) = desug e
-   desug (VarKey v) = pure (E.Str bot v)
+   desug (VarKey α v) = pure (E.Str α v)
    desugBwd e (ExprKey e') = ExprKey $ desugBwd e e'
-   desugBwd _ (VarKey v) = VarKey v
+   desugBwd e v = varKeyBwd e v
+
+varKeyBwd :: forall a. E.Expr a -> Raw DictEntry -> DictEntry a
+varKeyBwd (E.Str α _) (VarKey _ v') = VarKey α v'
+varKeyBwd _ _ = error absurd
 
 instance Desugarable Expr E.Expr where
    desug = exprFwd
