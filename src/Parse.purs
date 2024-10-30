@@ -28,9 +28,8 @@ import Parsing.String.Basic (oneOf)
 import Parsing.Token (GenLanguageDef(..), LanguageDef, TokenParser, alphaNum, letter, makeTokenParser, unGenLanguageDef)
 import Pretty (prettyP)
 import Primitive.Parse (OpDef, opDefs)
-import SExpr (Branch, Clause(..), Clauses(..), Expr(..), ListRest(..), ListRestPattern(..), Module(..), Pattern(..), Qualifier(..), RecDefs, VarDef(..), VarDefs)
+import SExpr (Branch, Clause(..), Clauses(..), DictEntry(..), Expr(..), ListRest(..), ListRestPattern(..), Module(..), Pattern(..), Qualifier(..), RecDefs, VarDef(..), VarDefs)
 import Util (Endo, type (×), (×), type (+), error, onlyIf)
-import Util.Pair (Pair(..))
 import Util.Parse (SParser, sepBy_try, sepBy1_try, some)
 
 languageDef :: LanguageDef
@@ -299,7 +298,6 @@ expr_ =
                <|> listEnum
                <|> try constr
                <|> dict
-               <|> record
                <|> try variable
                <|> try float
                <|> try int -- int may start with +/-
@@ -349,11 +347,16 @@ expr_ =
             constr = Constr unit <$> ctr <@> empty
 
             dict :: SParser (Raw Expr)
-            dict = sepBy (Pair <$> (expr' <* colonEq) <*> expr') token.comma <#> Dictionary unit #
-               between (token.symbol str.dictLBracket) (token.symbol str.dictRBracket)
+            dict = sepBy kvPair token.comma <#> Dictionary unit # token.braces
+               where
+               kvPair :: SParser ((Raw DictEntry) × (Raw Expr))
+               kvPair = (((ExprKey <$> expr') # token.brackets) <* token.colon) `lift2 (×)` expr' <|> ((VarKey unit <$> ident) <* token.colon) `lift2 (×)` expr'
 
-            record :: SParser (Raw Expr)
-            record = sepBy (field expr') token.comma <#> Record unit # token.braces
+            -- record :: SParser (Raw Expr)
+            -- record = sepBy kvPair token.comma <#> Dictionary unit # token.braces
+            --    where
+            --    kvPair :: SParser ((Raw DictEntry) × (Raw Expr))
+            --    kvPair = ((VarKey <$> ident) <* token.colon) `lift2 (×)` expr'
 
             variable :: SParser (Raw Expr)
             variable = ident <#> Var
