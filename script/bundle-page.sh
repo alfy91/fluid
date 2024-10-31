@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # run from project root
-# set -x
+set -x
 set -e
 
 toLispCase() {
