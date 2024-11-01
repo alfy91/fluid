@@ -3,11 +3,7 @@
 set -x
 set -e
 
-toLispCase() {
-   INPUT="$1"
-   RESULT=$(echo "$INPUT" | sed -E 's/([a-z0-9])([A-Z])/\1-\2/g' | tr '[:upper:]' '[:lower:]')
-   echo "$RESULT"
-}
+. script/util/lisp-case.sh
 
 MODULE=$1
 SRC_PATH=${MODULE//./\/}

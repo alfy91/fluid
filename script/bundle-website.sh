@@ -3,11 +3,7 @@
 set -x
 set -e
 
-toLispCase() {
-   INPUT="$1"
-   RESULT=$(echo "$INPUT" | sed -E 's/([a-z0-9])([A-Z])/\1-\2/g' | tr '[:upper:]' '[:lower:]')
-   echo "$RESULT"
-}
+. script/util/lisp-case.sh
 
 WEBSITE=$1
 . script/bundle-page.sh $WEBSITE
