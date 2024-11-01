@@ -3,6 +3,7 @@
 set -e
 
 WEBSITE=$1
+
 if [ -e "src/Website/Test/$WEBSITE" ] || [ -e "src/Website/Test/$WEBSITE.purs" ]; then
    echo "Testing website: ${WEBSITE}"
 
