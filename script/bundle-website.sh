@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 # run from project root
-set -x
-set -e
-
-. script/util/lisp-case.sh
+set -xe
 
 WEBSITE=$1
 . script/bundle-page.sh $WEBSITE
@@ -24,7 +21,7 @@ for FILE in "${FILES[@]}"; do
    done
 shopt -u nullglob
 
-WEBSITE_LISP_CASE=$(toLispCase "$WEBSITE")
+WEBSITE_LISP_CASE=$(./script/util/lisp-case.sh "$WEBSITE")
 ./script/util/copy-static.sh $WEBSITE_LISP_CASE
 
 echo "Bundled website $WEBSITE"

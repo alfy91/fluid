@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-. script/util/lisp-case.sh
-
 yarn puppeteer browsers install chrome
 yarn puppeteer browsers install firefox
 
@@ -17,5 +15,5 @@ fi
 
 # don't need to have "deployed" this to dist/
 # instead the following just picks up from output-es/
-WEBSITE_LISP_CASE=$(toLispCase "$WEBSITE")
+WEBSITE_LISP_CASE=$(./script/util/lisp-case.sh "$WEBSITE")
 node puppeteer.js Website.Test.$MODULE $WEBSITE_LISP_CASE
