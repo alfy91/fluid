@@ -29,8 +29,8 @@ let realTable = newDataTable 0;
     sspone = getByScenario "SSP1-1.9" realTable;
     ssptwo = getByScenario "SSP2-4.5" realTable
 in MultiView {
-    ["table"]: tableData,
-    ["explanation"] :
+    table: tableData,
+    explanation:
         LinkedText
           [ "The low-emissions scenario -- ", sspone.scenario ," -- projects a temperature increase of "
           , numToStr sspone.bE81100, " by the end of the century."

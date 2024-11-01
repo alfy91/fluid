@@ -27,8 +27,8 @@ testFig page = do
    clickBarChart
    where
    fig = "fig"
-   barChart = fig <> "-bar-chart"
-   lineChart = fig <> "-line-chart"
+   barChart = fig <> "-barChart"
+   lineChart = fig <> "-lineChart"
 
    clickBarChart :: Aff Unit
    clickBarChart = do
