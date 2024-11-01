@@ -8,9 +8,11 @@ WEBSITE=$1
 # Only support one level of nesting for now
 shopt -s nullglob
 
+set +x
 FILES=($(for FILE in src/Website/$WEBSITE/*.{purs,html}; do
    basename "$FILE" | sed 's/\.[^.]*$//'
 done | sort -u))
+set -x
 
 echo "Processing ${WEBSITE} files: ${FILES[@]}"
 
