@@ -200,6 +200,10 @@ html {
    to { opacity: 1; }
 }
 
-.fig-loading {
+.fig-loading:only-child {
    animation: fadeIn 2s ease-in-out infinite alternate;
+}
+
+.fig-loading:not(:only-child) {
+   display: none;
 }
