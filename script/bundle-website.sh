@@ -9,16 +9,14 @@ WEBSITE=$1
 shopt -s nullglob
 
 set +x
-FILES=($(for FILE in src/Website/$WEBSITE/*.{purs,html}; do
+PAGES=($(for FILE in src/Website/$WEBSITE/*.{purs,html}; do
    basename "$FILE" | sed 's/\.[^.]*$//'
 done | sort -u))
 set -x
 
-echo "Processing ${WEBSITE} files: ${FILES[@]}"
+echo "Processing ${WEBSITE} pages: ${PAGES[@]}"
 
-for FILE in "${FILES[@]}"; do
-   PAGE=$(basename "$FILE")
-   PAGE=${PAGE%.*}
+for PAGE in "${PAGES[@]}"; do
    . script/bundle-page.sh $WEBSITE.$PAGE
    done
 shopt -u nullglob

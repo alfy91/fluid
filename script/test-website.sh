@@ -11,18 +11,16 @@ if [ -e "src/Website/Test/$WEBSITE" ] || [ -e "src/Website/Test/$WEBSITE.purs" ]
    fi
 
    if [ -e "src/Website/Test/$WEBSITE" ]; then
-      FILES=($(for FILE in src/Website/Test/$WEBSITE/*.purs; do
+      PAGES=($(for FILE in src/Website/Test/$WEBSITE/*.purs; do
          basename "$FILE" | sed 's/\.[^.]*$//'
       done | sort -u))
    else
-      FILES=()
+      PAGES=()
    fi
 
-   echo "Processing ${#FILES[@]} additional Test/${WEBSITE} files: ${FILES[@]}"
+   echo "Processing ${#PAGES[@]} additional Test/${WEBSITE} pages: ${PAGES[@]}"
 
-   for FILE in "${FILES[@]}"; do
-      PAGE=$(basename "$FILE")
-      PAGE=${PAGE%.*}
+   for PAGE in "${PAGES[@]}"; do
       . script/test-page.sh $WEBSITE $WEBSITE.$PAGE
       done
 else
