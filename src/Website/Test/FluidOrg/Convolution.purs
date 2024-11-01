@@ -1,4 +1,4 @@
-module Website.Test.Misc.Convolution where
+module Website.Test.FluidOrg.Convolution where
 
 import Prelude hiding (absurd)
 
