@@ -58,11 +58,11 @@
 
          const divElements = header.querySelectorAll('div')
          const grid = document.getElementById('grid')
-         for (let i = 0; i < divElements.length; ++i) {
-            grid.appendChild(divElements[i])
+         for (let i = Math.min(3, divElements.length - 1); i >= 0; --i) {
+            grid.insertBefore(divElements[i], grid.firstChild)
          }
       })
-      .catch(error => console.error('Error loading shared HTML:', error));
+      .catch(error => console.error('Error loading shared HTML:', error))
 
    // move to PureScript
    toggle('fig-input')
