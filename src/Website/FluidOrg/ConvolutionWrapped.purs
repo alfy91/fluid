@@ -1,4 +1,4 @@
-module Website.Misc.Convolution where
+module Website.FluidOrg.ConvolutionWrapped where
 
 import Prelude hiding (absurd)
 
@@ -12,7 +12,7 @@ import Util ((×))
 
 fig :: FigSpec
 fig =
-   { file: File "slicing/convolution/emboss"
+   { file: File "slicing/convolution/emboss-wrap"
    , imports:
         [ "lib/convolution"
         , "example/slicing/convolution/test-image"
@@ -21,10 +21,6 @@ fig =
    , datasets: []
    , inputs: [ "inputImage", "filter" ]
    }
-
---    Incorporate these:
---      , loadFile' (Folder "fluid/lib") (File "convolution")
---      , loadFile' (Folder "fluid/example/slicing/convolution") (File "emboss-wrap")
 
 main :: Effect Unit
 main = runAffs_ (uncurry drawFig) [ ("fig" × _) <$> loadFig fig ]
