@@ -21,7 +21,7 @@
    </script>
 </head>
 <body class="standalone">
-<div class="grid-container double-size">
+<div class="grid-container">
    <div></div>
    <div></div>
    <div></div>
@@ -36,7 +36,9 @@
       <div onclick="toggle('fig-input')"><span class="data-pane-button toggle-button">◀▶</span></div>
    </div>
    <div class="flex-left-align">
-      <div id="fig"></div>
+      <div id="fig">
+         <div class="fig-loading">loading figure(s)</div>
+      </div>
       <p>Why do the used inputs not match the shape of the filter?
       <br>
       What happens at the <b>edge</b> of the output matrix?
@@ -49,8 +51,8 @@
          <div id="codemirror-convolution"></div>
       </details>
       <details>
-         <summary>emboss-zero-wrap.fld</summary>
-         <div id="codemirror-emboss-wrap"></div>
+         <summary>emboss.fld</summary>
+         <div id="codemirror-emboss"></div>
       </details>
    </div>
 </div>
