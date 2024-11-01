@@ -81,9 +81,6 @@ function drawBarChart_ (
       let rootElement = div.selectAll('#' + childId)
 
       if (rootElement.empty()) {
-         div.selectAll(".fig-loading")
-            .remove()
-
          rootElement = div
             .append('svg')
                .attr('width', width + margin.left + margin.right)
