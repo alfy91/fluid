@@ -2,5 +2,6 @@
 set -xe
 
 yarn build
-yarn bundle-standalone-all
+yarn bundle-website Esop2025Artifact
+yarn bundle-website Misc
 yarn test-all
