@@ -4,13 +4,13 @@ let totalFor year country =
    in row.nuclearOut + row.gasOut + row.coalOut + row.petrolOut;
     stack year = [ { y: country, z: totalFor year country } | country <- countries ];
     yearData year = [ row | row <- nonRenewables, row.year == year, row.country `elem` countries ]
-in MultiView {|
-   ["bar-chart"]: BarChart {
+in MultiView {
+   barChart: BarChart {
       caption: "Non-renewables output",
       size: { width: 275, height: 185 },
       stackedBars: [ { x: numToStr year, bars: stack year } | year <- [2014..2018] ]
    },
-   ["scatter-plot"]: ScatterPlot {
+   scatterPlot: ScatterPlot {
       caption: "",
       points: [ {
          x: sum [ row.nuclearOut | row <- yearData year ],
@@ -19,4 +19,4 @@ in MultiView {|
       xlabel: "Nuclear capacity",
       ylabel: "Nuclear output"
    }
-|}
+}

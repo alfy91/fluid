@@ -4,14 +4,14 @@ set -e
 
 WEBSITE=$1
 
-if [ -e "src/Website/Test/$WEBSITE" ] || [ -e "src/Website/Test/$WEBSITE.purs" ]; then
+if [[ -e "src/Website/$WEBSITE.purs" || -e "src/Website/$WEBSITE.html" ]]; then
    echo "Testing website: ${WEBSITE}"
 
-   if [ -e "src/Website/Test/$WEBSITE.purs" ]; then
+   if [[ -e "src/Website/Test/$WEBSITE.purs" ]]; then
       . script/test-page.sh $WEBSITE $WEBSITE
    fi
 
-   if [ -e "src/Website/Test/$WEBSITE" ]; then
+   if [[ -e "src/Website/Test/$WEBSITE" ]]; then
       PAGES=($(for FILE in src/Website/Test/$WEBSITE/*.purs; do
          basename "$FILE" | sed 's/\.[^.]*$//'
       done | sort -u))
@@ -25,5 +25,6 @@ if [ -e "src/Website/Test/$WEBSITE" ] || [ -e "src/Website/Test/$WEBSITE.purs" ]
       . script/test-page.sh $WEBSITE $WEBSITE.$PAGE
       done
 else
-   echo "No tests found for: ${WEBSITE}"
+   echo "No website found corresponding to Test/$WEBSITE"
+   exit 1
 fi
