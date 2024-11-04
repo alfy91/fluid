@@ -22,10 +22,10 @@ for PAGE in "${PAGES[@]}"; do
 
 WEBSITE_LISP_CASE=$(./script/util/lisp-case.sh "$WEBSITE")
 
-for HTML_FILE in src/Website/$WEBSITE/*.html; do
-   BASENAME="$(basename "$HTML_FILE")"
+for CHILD in src/Website/$WEBSITE/*; do
+   BASENAME="$(basename "$CHILD")"
    if [[ "$BASENAME" =~ ^[a-z] ]]; then
-      cp "$HTML_FILE" "dist/$WEBSITE_LISP_CASE/$BASENAME"
+      cp -rL "$CHILD" "dist/$WEBSITE_LISP_CASE/$BASENAME"
    fi
    done
 
