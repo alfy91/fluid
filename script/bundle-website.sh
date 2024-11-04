@@ -40,7 +40,5 @@ for CHILD in "${TO_COPY[@]}"; do
    done
 
 shopt -u nullglob
-
-./script/util/copy-static.sh $WEBSITE_LISP_CASE
-
+cp -r fluid dist/$WEBSITE_LISP_CASE
 echo "Bundled website $WEBSITE"
