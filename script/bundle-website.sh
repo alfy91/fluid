@@ -9,7 +9,7 @@ WEBSITE=$1
 shopt -s nullglob
 
 set +x
-PAGES=($(for FILE in src/Website/$WEBSITE/*.purs; do
+PAGES=($(for FILE in website/$WEBSITE/*.purs; do
    basename "$FILE" | sed 's/\.[^.]*$//'
 done | sort -u))
 set -x
@@ -24,7 +24,7 @@ WEBSITE_LISP_CASE=$(./script/util/lisp-case.sh "$WEBSITE")
 
 set +x
 TO_COPY=()
-for CHILD in src/Website/$WEBSITE/*; do
+for CHILD in website/$WEBSITE/*; do
    BASENAME="$(basename "$CHILD")"
    if [[ "$BASENAME" =~ ^[a-z] ]]; then
       TO_COPY+=("$CHILD")
