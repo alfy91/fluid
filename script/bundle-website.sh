@@ -22,11 +22,21 @@ for PAGE in "${PAGES[@]}"; do
 
 WEBSITE_LISP_CASE=$(./script/util/lisp-case.sh "$WEBSITE")
 
+set +x
+TO_COPY=()
 for CHILD in src/Website/$WEBSITE/*; do
    BASENAME="$(basename "$CHILD")"
    if [[ "$BASENAME" =~ ^[a-z] ]]; then
-      cp -rL "$CHILD" "dist/$WEBSITE_LISP_CASE/$BASENAME"
+      TO_COPY+=("$CHILD")
    fi
+done
+set -x
+
+echo "Processing static files:"
+
+for CHILD in "${TO_COPY[@]}"; do
+   BASENAME="$(basename "$CHILD")"
+   cp -rL "$CHILD" "dist/$WEBSITE_LISP_CASE/$BASENAME"
    done
 
 shopt -u nullglob
