@@ -44,6 +44,7 @@
     "datetime": "^0.0.3",
     "express": "^4.19.2",
     "express-static": "^1.2.6",
+    "http-serve": "^1.0.1",
     "http-shutdown": "^1.2.2",
     "node-process": "^1.0.1",
     "purescript": "^0.15.10"
